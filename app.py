@@ -100,23 +100,25 @@ def display_user_info(infos):
 
     # Advanced lookup
     other_infos = advanced_lookup(infos.get("username", ""))
+
     if other_infos["error"] == "rate limit":
         result.append("⚠️ *Rate limit!* Please wait a few minutes and try again.")
-    elif "message" in other_infos["user"].keys():
+    elif other_infos["user"] and "message" in other_infos["user"]:
         if other_infos["user"]["message"] == "No users found":
             result.append("❌ *Lookup failed!* No users found.")
         else:
             result.append(other_infos["user"]["message"])
     else:
-        if other_infos["user"].get("obfuscated_email"):
+        if other_infos["user"] and other_infos["user"].get("obfuscated_email"):
             result.append(f"🔒 *Obfuscated Email* : {other_infos['user']['obfuscated_email']}")
         else:
             result.append("🔒 *Obfuscated Email* : None")
 
-        if other_infos["user"].get("obfuscated_phone"):
+        if other_infos["user"] and other_infos["user"].get("obfuscated_phone"):
             result.append(f"📵 *Obfuscated Phone* : {other_infos['user']['obfuscated_phone']}")
         else:
             result.append("📵 *Obfuscated Phone* : None")
+
 
     if infos.get("hd_profile_pic_url_info", {}).get("url"):
         result.append(f"🖼 *Profile Picture* : {infos['hd_profile_pic_url_info']['url']}")
