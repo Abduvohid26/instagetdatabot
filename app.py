@@ -226,7 +226,7 @@ import sys
 import requests
 from urllib.parse import quote_plus
 from json import dumps
-from aiogram import types, Bot, Dispatcher
+from aiogram import types, Bot, Dispatcher, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from aiogram.filters.state import State, StatesGroup
@@ -344,23 +344,26 @@ def display_user_info(infos):
     return "\n".join(result)
 
 
-@dp.message(GetData.start)
-async def get_state1(message: types.Message, state: FSMContext):
+# @dp.message(GetData.start)
+# async def get_state1(message: types.Message, state: FSMContext):
+#     username = message.text.strip()
+#     if not username:
+#         await message.answer("⚠️ Iltimos, Instagram username to'g'ri kiriting!")
+#         return
+#     await state.update_data(username=username)
+#     await message.answer(text="Malumotlar yuklanmooqda kuting ⏰")
+#     print(username, 'username')
+#     await state.set_state(GetData.final)
+
+
+@dp.message(F.text)
+async def get_instagram_info(message: types.Message):
     username = message.text.strip()
     if not username:
         await message.answer("⚠️ Iltimos, Instagram username to'g'ri kiriting!")
         return
-    await state.update_data(username=username)
     await message.answer(text="Malumotlar yuklanmooqda kuting ⏰")
-    print(username, 'username')
-    await state.set_state(GetData.final)
-
-
-@dp.message(GetData.final)
-async def get_instagram_info(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    username = data.get("username")
-    print(user_data, DEFAULT_SESSION_ID)
+    print(username, DEFAULT_SESSION_ID)
     user_data = get_user_id(username, DEFAULT_SESSION_ID)
     if user_data["error"]:
         await message.answer(f"Xatolik: {user_data['error']}")
@@ -375,7 +378,6 @@ async def get_instagram_info(message: types.Message, state: FSMContext):
     infos = user_info["user"]
     user_text = display_user_info(infos)
     await message.answer(user_text)
-    await state.clear()
 
 def get_user_id(username, session_id):
     headers = {
