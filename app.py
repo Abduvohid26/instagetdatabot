@@ -364,10 +364,19 @@ async def get_instagram_info(message: types.Message):
         return
     await message.answer(text="Malumotlar yuklanmooqda kuting ⏰")
     print(username, DEFAULT_SESSION_ID)
+
     user_data = get_user_id(username, DEFAULT_SESSION_ID)
+    print(user_data, 'userdata')
+
+    # if not user_data or "data" not in user_data or "user" not in user_data["data"]:
+    #     await message.answer("⚠️ Instagram foydalanuvchi ma'lumotlari topilmadi!")
+    #     return
+    
     if user_data["error"]:
         await message.answer(f"Xatolik: {user_data['error']}")
         return
+
+    
 
     user_id = user_data["id"]
     user_info = get_user_info(user_id, DEFAULT_SESSION_ID)
@@ -391,10 +400,18 @@ def get_user_id(username, session_id):
         response = requests.get(url, headers=headers, cookies=cookies, timeout=10)
         response.raise_for_status()
         user_data = response.json()
-        user_id = user_data["data"]["user"]["id"]
-        return {"id": user_id, "error": None}
+        print(user_data, "usertdata")  # Natijani tekshirish uchun
+
+        # Xavfsiz tekshirish
+        user_info = user_data.get("data", {}).get("user")
+        if user_info:
+            user_id = user_info.get("id")
+            return {"id": user_id, "error": None}
+
     except requests.exceptions.RequestException as e:
         return {"id": None, "error": str(e)}
+
+    return {"id": None, "error": "Foydalanuvchi topilmadi"}
 
 def get_user_info(user_id, session_id):
     headers = {
