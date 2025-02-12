@@ -36,7 +36,7 @@ async def get_state1(message: types.Message, state: FSMContext):
         await message.answer("⚠️ Iltimos, Instagram username to'g'ri kiriting!")
         return
     await state.update_data(username=username)
-    await message.answer("Session ID kiriting:")
+    # await message.answer("Session ID kiriting:")
     await state.set_state(GetData.final)
 
 
@@ -133,7 +133,8 @@ def display_user_info(infos):
 async def get_instagram_info(message: types.Message, state: FSMContext):
     data = await state.get_data()
     username = data.get("username")
-    session_id = message.text.strip()
+    # session_id = message.text.strip()
+    session_id = '72761352336%3AaAVwdNHZpUqZCm%3A3%3AAYev7Lp2T4YhuDdKBj2TQWG6KUsLIPVoF1mb_lRjVQ'
     user_data = get_user_id(username, session_id)
     if user_data["error"]:
         await message.answer(f"Xatolik: {user_data['error']}")
