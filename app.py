@@ -254,6 +254,7 @@ async def get_message(msg: types.Message, state: FSMContext):
 
 
 
+
 def advanced_lookup(username):
     """
     Post to get obfuscated login information from Instagram.
@@ -350,6 +351,8 @@ async def get_state1(message: types.Message, state: FSMContext):
         await message.answer("⚠️ Iltimos, Instagram username to'g'ri kiriting!")
         return
     await state.update_data(username=username)
+    await message.answer(text="Malumotlar yuklanmooqda kuting ⏰")
+    print(username, 'username')
     await state.set_state(GetData.final)
 
 
@@ -357,6 +360,7 @@ async def get_state1(message: types.Message, state: FSMContext):
 async def get_instagram_info(message: types.Message, state: FSMContext):
     data = await state.get_data()
     username = data.get("username")
+    print(user_data, DEFAULT_SESSION_ID)
     user_data = get_user_id(username, DEFAULT_SESSION_ID)
     if user_data["error"]:
         await message.answer(f"Xatolik: {user_data['error']}")
