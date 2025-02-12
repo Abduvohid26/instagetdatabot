@@ -4,13 +4,14 @@ import sys
 import requests
 from urllib.parse import quote_plus
 from json import dumps
-from aiogram import types, Bot, Dispatcher
+from aiogram import types, Bot, Dispatcher, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from aiogram.filters.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from decouple import config
 from json import JSONDecodeError
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 # Token va adminlar ro‘yxati
 TOKEN = config('BOT_TOKEN')
@@ -24,10 +25,19 @@ class GetData(StatesGroup):
     final = State()
 
 @dp.message(Command('start'))
-async def get_message(msg: types.Message, state: FSMContext):
-    await msg.answer("Assalamu Aleykum! Botga xush kelibsiz! 👋")
-    await msg.answer("Iltimos, Instagram username kiriting:")
+async def get_message(msg: types.Message):
+    btn = ReplyKeyboardBuilder()
+    btn.button(text="Username Kiriting")
+    await msg.answer("Assalamu Aleykum! Botga xush kelibsiz! 👋", reply_markup=btn.as_markup(resize_keyboard=True, one_time_keyboard=True))
+
+@dp.message(F.text == 'Username Kiriting')
+async def get_start(message: types.Message,  state: FSMContext):
+    await message.answer("Iltimos, Instagram username kiriting:")
     await state.set_state(GetData.start)
+
+
+
+
 
 @dp.message(GetData.start)
 async def get_state1(message: types.Message, state: FSMContext):
@@ -134,6 +144,7 @@ async def get_instagram_info(message: types.Message, state: FSMContext):
     data = await state.get_data()
     username = data.get("username")
     session_id = message.text.strip()
+    await message.answer(text="Malumotlar yuklanmooqda kuting ⏰")
     user_data = get_user_id(username, session_id)
     if user_data["error"]:
         await message.answer(f"Xatolik: {user_data['error']}")
