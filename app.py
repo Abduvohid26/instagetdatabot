@@ -14,9 +14,11 @@ from json import JSONDecodeError
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 # Token va adminlar ro‘yxati
-TOKEN = config('BOT_TOKEN')
-ADMINS = config('ADMINS').split(" ")
+# TOKEN = config('BOT_TOKEN')
+# ADMINS = config('ADMINS').split(" ")
 
+TOKEN='8102263265:AAEaCVYBJ8zi8dJiNKx8y9fc1bTp9stba3Y'
+ADMINS=['816660001']
 bot = Bot(TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
